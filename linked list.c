@@ -2,30 +2,31 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-struct memes{
+typedef struct node{
     int value;
-    struct memes*other;
-};
+    node*other;
+}node;
 
-typedef struct memes node;
-typedef struct memes* list;
 
-void append_list(list*list1,int x){
-    node* new_node = (node*)malloc(sizeof(int));
-    new_node->value = x;
+typedef node* list;
+
+void append_list(list* head,int value){
+    node* new_node = (node*)malloc(sizeof(node));
+    new_node->value = value;
     new_node->other = NULL;
 
-    if(*list1 == NULL){
-        *list1 = new_node;
+    if(*head == NULL){
+        *head = new_node;
     }
     else{
-        node* cell =*list1;
+        node* cell =*head;
         while(cell->other !=NULL){
             cell = cell->other;
         }
         cell->other = new_node;
     }
 }
+// show list :
 void show_list(list list1){
     printf("[");
     while(list1 !=NULL){
@@ -37,8 +38,33 @@ void show_list(list list1){
     }
     printf("]\n");
 }
+
+void delete_list (node* head, int val) {
+    node* cell = head;
+    node* prev = NULL;
+
+    while (cell != NULL) {
+        if (cell->value == val) {
+            if (prev == NULL) {
+                head = cell->other;
+                free(cell);
+                cell = head;
+            }
+            else {
+                prev->other = cell->other;
+                free(cell);
+                cell = prev->other;
+            }
+        }
+        else {
+            prev = cell;
+            cell = cell->other;
+        }
+    }
+}
+
 int main(){
-    list list = NULL;
+    node*list =NULL;
     append_list(&list,1);
     append_list(&list,2);
     append_list(&list,1);
